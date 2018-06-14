@@ -18,7 +18,8 @@ public class helperClass extends SQLiteOpenHelper {
         String QUERY = "CREATE TABLE " + tasksTable.TABLE_NAME + " ("
                 + tasksTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + tasksTable.TASK + " TEXT NOT NULL, "
-                + tasksTable.TIME + " TEXT NOT NULL );";
+                + tasksTable.TIME + " TEXT NOT NULL, "
+                + tasksTable.DATE + " DATE NOT NULL );";
 
         db.execSQL(QUERY);
     }

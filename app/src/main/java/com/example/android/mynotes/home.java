@@ -68,7 +68,7 @@ public class home extends AppCompatActivity implements LoaderManager.LoaderCallb
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if(id == LOAD_DATA){
-            String[] projection = {tasksTable._ID,tasksTable.TASK, tasksTable.TIME};
+            String[] projection = {tasksTable._ID,tasksTable.TASK, tasksTable.TIME,tasksTable.DATE};
             return new CursorLoader(this,tasksTable.CONTENT_URI,projection,null,null,null);
         }
         return null;

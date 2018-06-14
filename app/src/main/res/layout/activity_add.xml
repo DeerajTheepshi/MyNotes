@@ -32,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/taskEntry"
+        android:id="@+id/timeEntry"
         android:layout_margin="18dp">
 
         <TextView
@@ -41,14 +42,40 @@
             android:textSize="18sp"
             android:layout_weight="2"/>
 
-        <EditText
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:textSize="18sp"
             android:layout_weight="3"
             android:layout_marginLeft="8dp"
             android:hint="Touch to open clock"
             android:id="@+id/time"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timeEntry"
+        android:layout_margin="18dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Task Date "
+            android:textSize="18sp"
+            android:layout_weight="2"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textSize="18sp"
+            android:layout_weight="3"
+            android:layout_marginLeft="8dp"
+            android:hint="Touch to open calendar"
+            android:id="@+id/date"/>
 
     </LinearLayout>
 
