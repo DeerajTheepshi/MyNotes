@@ -19,6 +19,7 @@ public class contractClass {
         public final static String TASK = "task";
         public final static String DATE = "date";
         public final static String TIME = "time";
+        public final static String PRIORITY = "priority";
     }
 
 

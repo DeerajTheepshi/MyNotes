@@ -39,7 +39,7 @@ public class provider extends ContentProvider {
         Cursor cursor=null;
         if(matchUris.match(uri)==ENTIRE_TABLE){
             Log.v("kaala","vantenu sollu1");
-            cursor = db.query(tasksTable.TABLE_NAME,projection,selection,selectionArgs,null,null,null,sortOrder);
+            cursor = db.query(tasksTable.TABLE_NAME,projection,selection,selectionArgs,null,null,sortOrder);
             Log.v("kaala","vantenu sollu2");
         }
         cursor.setNotificationUri(getContext().getContentResolver(),uri);

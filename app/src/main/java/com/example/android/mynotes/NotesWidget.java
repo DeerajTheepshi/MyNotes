@@ -43,7 +43,7 @@ public class NotesWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    @Override
+   /* @Override
     public void onReceive(final Context context, Intent intent) {
         final String action = intent.getAction();
         if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
@@ -60,7 +60,7 @@ public class NotesWidget extends AppWidgetProvider {
         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intent.setComponent(new ComponentName(context, NotesWidget.class));
         context.sendBroadcast(intent);
-    }
+    }*/
 
 
 

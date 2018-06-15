@@ -13,8 +13,11 @@ package com.example.android.mynotes;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
+        import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
         import android.widget.DatePicker;
         import android.widget.EditText;
+        import android.widget.Spinner;
         import android.widget.TextView;
         import android.widget.TimePicker;
         import android.widget.Toast;
@@ -24,8 +27,10 @@ package com.example.android.mynotes;
 
 public class addTask extends AppCompatActivity {
     EditText taskEntry;
+    Spinner priority;
     TextView timeEntry,dateEntry;
     String task_details, time_details,dateSqlFormat;
+    int priorityVal;
     Calendar cal = Calendar.getInstance();
 
     @Override
@@ -35,6 +40,7 @@ public class addTask extends AppCompatActivity {
         taskEntry = (EditText)findViewById(R.id.task);
         timeEntry= (TextView) findViewById(R.id.time);
         dateEntry = (TextView) findViewById(R.id.date);
+        priority = (Spinner) findViewById(R.id.importanceSpinner);
 
         final TimePickerDialog.OnTimeSetListener listenTime = new TimePickerDialog.OnTimeSetListener(){
             @Override
@@ -75,6 +81,41 @@ public class addTask extends AppCompatActivity {
                 new DatePickerDialog(addTask.this,listenDate,cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+
+        initializeSpinner();
+
+    }
+
+    public void initializeSpinner(){
+        final ArrayAdapter priorityAdapter = ArrayAdapter.createFromResource(this, R.array.importanceList,android.R.layout.simple_spinner_item);
+        priorityAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        priority.setAdapter(priorityAdapter);
+
+
+        priority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString();
+
+                switch (selected){
+                    case "! ! !":
+                        priorityVal = 0;
+                        break;
+                    case "! !":
+                        priorityVal = 1;
+                        break;
+                    case "!":
+                        priorityVal = 2;
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -101,10 +142,14 @@ public class addTask extends AppCompatActivity {
         val.put(tasksTable.TASK,task_details);
         val.put(tasksTable.TIME,time_details);
         val.put(tasksTable.DATE,dateSqlFormat);
+        val.put(tasksTable.PRIORITY,priorityVal);
         Uri uri =getContentResolver().insert(tasksTable.CONTENT_URI,val);
         if(uri != null) {
+            AppWidgetManager mgr = AppWidgetManager.getInstance(this);
+            ComponentName cn = new ComponentName(this, NotesWidget.class);
+            mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.appwidget_list);
             finish();
-            addTask a = (addTask) this;
+            /*addTask a = (addTask) this;
             a.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -112,7 +157,8 @@ public class addTask extends AppCompatActivity {
                     // this will send the broadcast to update the appwidget
                     NotesWidget.sendRefreshBroadcast(addTask.this);
                 }
-            });
+            });*/
         }
+
     }
 }

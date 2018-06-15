@@ -19,7 +19,8 @@ public class helperClass extends SQLiteOpenHelper {
                 + tasksTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + tasksTable.TASK + " TEXT NOT NULL, "
                 + tasksTable.TIME + " TEXT NOT NULL, "
-                + tasksTable.DATE + " DATE NOT NULL );";
+                + tasksTable.DATE + " DATE NOT NULL, "
+                + tasksTable.PRIORITY +" INTEGER NOT NULL );";
 
         db.execSQL(QUERY);
     }

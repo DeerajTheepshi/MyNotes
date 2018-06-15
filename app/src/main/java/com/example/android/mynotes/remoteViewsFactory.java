@@ -11,6 +11,8 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import com.example.android.mynotes.data.contractClass.tasksTable;
 
+import java.util.Calendar;
+
 public class remoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext;
     private Cursor mCursor;
@@ -23,16 +25,30 @@ public class remoteViewsFactory implements RemoteViewsService.RemoteViewsFactory
             mCursor.close();
         }
 
+
         final long identityToken = Binder.clearCallingIdentity();
         Uri uri = tasksTable.CONTENT_URI;
         String[] projection = {tasksTable._ID,tasksTable.TASK,tasksTable.TIME};
+        String selection = tasksTable.DATE + "=?";
+        String[] selctionArgs = new String[]{getDate()};
+        Log.v("mama",getDate());
         mCursor = mContext.getContentResolver().query(uri,
                 projection,
-                null,
-                null,
-                null);
+                selection,
+                selctionArgs,
+                tasksTable.TIME+ " ASC");
         Log.v("Kaala","InitCursor()");
         Binder.restoreCallingIdentity(identityToken);
+    }
+
+    private String getDate(){
+        Calendar cal = Calendar.getInstance();
+        String yr=cal.get(Calendar.YEAR)+"", monthformat=cal.get(Calendar.MONTH)+"", dayformat=cal.get(Calendar.DAY_OF_MONTH)+"";
+        if(cal.get(Calendar.MONTH)<10)
+            monthformat = "0" + cal.get(Calendar.MONTH);
+        if(cal.get(Calendar.DAY_OF_MONTH)<10)
+            dayformat = "0" + cal.get(Calendar.DAY_OF_MONTH);
+        return yr+"/"+monthformat+"/"+dayformat;
     }
     @Override
     public void onDataSetChanged() {

@@ -23,12 +23,15 @@ public class CustomAdaper extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        String[] arr = context.getResources().getStringArray(R.array.importanceList);
         TextView listTask = (TextView) view.findViewById(R.id.displayTask);
         TextView listTime = (TextView) view.findViewById(R.id.displayTime);
         TextView listDate = (TextView) view.findViewById(R.id.displayDate);
+        TextView listPriority = (TextView) view.findViewById(R.id.displayPriority);
         listTask.setText(cursor.getString(cursor.getColumnIndex(tasksTable.TASK)));
         listTime.setText(cursor.getString(cursor.getColumnIndex(tasksTable.TIME)));
         listDate.setText(dateReFormat(cursor.getString(cursor.getColumnIndex(tasksTable.DATE))));
+        listPriority.setText(arr[cursor.getInt(cursor.getColumnIndex(tasksTable.PRIORITY))]);
     }
     private String dateReFormat(String date){
         String day = date.substring(8);
