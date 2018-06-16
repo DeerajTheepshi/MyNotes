@@ -26,7 +26,8 @@ package com.example.android.mynotes;
         import java.util.Calendar;
 
 public class addTask extends AppCompatActivity {
-    EditText taskEntry;
+
+    EditText taskEntry;                                                                             //ALL GLOBAL VARIABLES DECLARATIONS
     Spinner priority;
     TextView timeEntry,dateEntry;
     String task_details, time_details,dateSqlFormat;
@@ -42,7 +43,7 @@ public class addTask extends AppCompatActivity {
         dateEntry = (TextView) findViewById(R.id.date);
         priority = (Spinner) findViewById(R.id.importanceSpinner);
 
-        final TimePickerDialog.OnTimeSetListener listenTime = new TimePickerDialog.OnTimeSetListener(){
+        final TimePickerDialog.OnTimeSetListener listenTime = new TimePickerDialog.OnTimeSetListener(){ //INITIATE A TIME PICKER LISTENER
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String formatHour = ""+hourOfDay,formatMinute = ""+minute;
@@ -56,14 +57,14 @@ public class addTask extends AppCompatActivity {
 
         };
 
-        timeEntry.setOnClickListener(new View.OnClickListener() {
+        timeEntry.setOnClickListener(new View.OnClickListener() {                                   //INITATE A TIME PICKER AND SET LISTENER
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(addTask.this, listenTime,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),
                         android.text.format.DateFormat.is24HourFormat(getApplicationContext())).show();
             }
         });
-        final DatePickerDialog.OnDateSetListener listenDate = new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog.OnDateSetListener listenDate = new DatePickerDialog.OnDateSetListener() { //INITIATE A DATE PICKER LISTENER
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 String Dayformat = ""+dayOfMonth, monthFormat = ""+month;
@@ -75,24 +76,25 @@ public class addTask extends AppCompatActivity {
                 dateEntry.setText(Dayformat+"/"+monthFormat+"/"+year);
             }
         };
-        dateEntry.setOnClickListener(new View.OnClickListener() {
+        dateEntry.setOnClickListener(new View.OnClickListener() {                                   //INITIATE DATE PICKER AND ATTACH LISTENER
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(addTask.this,listenDate,cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
-        initializeSpinner();
+        initializeSpinner();                                                                        //SET UP ALL THE SPINNER
 
     }
 
     public void initializeSpinner(){
-        final ArrayAdapter priorityAdapter = ArrayAdapter.createFromResource(this, R.array.importanceList,android.R.layout.simple_spinner_item);
+        final ArrayAdapter priorityAdapter = ArrayAdapter.createFromResource                        //CREATE ARRAY FROM RESOURCE AND BIND IT
+                (this, R.array.importanceList,android.R.layout.simple_spinner_item);
         priorityAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         priority.setAdapter(priorityAdapter);
 
 
-        priority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        priority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {               //SET ON ITEM SELECTED LISTENER
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = parent.getItemAtPosition(position).toString();
@@ -119,13 +121,13 @@ public class addTask extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {                                                 //CREATE THE OPTIONS MENU
         getMenuInflater().inflate(R.menu.add_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {                                           //PERFORM THE SAVE ACTION WHEN SELECTED
         switch (item.getItemId()){
             case R.id.save:
                 save();
@@ -135,7 +137,7 @@ public class addTask extends AppCompatActivity {
 
 
 
-    public void save(){
+    public void save(){                                                                             //CREATE CONTENT VALUES AND UPLOAD IT TO DATABASE
         task_details = taskEntry.getText().toString().trim();
         time_details = timeEntry.getText().toString().trim();
         ContentValues val = new ContentValues();
@@ -145,19 +147,10 @@ public class addTask extends AppCompatActivity {
         val.put(tasksTable.PRIORITY,priorityVal);
         Uri uri =getContentResolver().insert(tasksTable.CONTENT_URI,val);
         if(uri != null) {
-            AppWidgetManager mgr = AppWidgetManager.getInstance(this);
-            ComponentName cn = new ComponentName(this, NotesWidget.class);
+            AppWidgetManager mgr = AppWidgetManager.getInstance(this);                              //NOTIFY WIDGET BROADCAST LISTENERS ABOUT DATA SET CHANGED,
+            ComponentName cn = new ComponentName(this, NotesWidget.class);                     // CALLS ON DATASETCHANGED METHOD OF WIDGET PROVIDER CLASS
             mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.appwidget_list);
-            finish();
-            /*addTask a = (addTask) this;
-            a.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(addTask.this, "New task created", Toast.LENGTH_LONG).show();
-                    // this will send the broadcast to update the appwidget
-                    NotesWidget.sendRefreshBroadcast(addTask.this);
-                }
-            });*/
+            finish();                                                                               //CLOSE ACTIVITY , MOVE TO PARENT ACTIVITY
         }
 
     }

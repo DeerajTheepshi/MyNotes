@@ -3,16 +3,16 @@ package com.example.android.mynotes.data;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
-
+//CLASS GIVES CONSTANTS FOR DATABASE
 public class contractClass {
 
-    public contractClass(){}
+    public contractClass(){}                                                                        //PUBLIC CONSTRUCTOR
 
-    public final static String CONTENT_AUTHORITY = "com.example.android.mynotes";
+    public final static String CONTENT_AUTHORITY = "com.example.android.mynotes";                   //CONTENT URI DESCRIPTION
     public final static Uri BASE_CONTENT_URI = Uri.parse("content://"+CONTENT_AUTHORITY);
     public final static String PATH = "tasks";
 
-    public final static class tasksTable implements BaseColumns{
+    public final static class tasksTable implements BaseColumns{                                    //ALL CONSTANTS NEEDED FOR DATABASE
         public final static Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH);
         public final static String TABLE_NAME = "tasks";
         public final static String _ID = BaseColumns._ID;

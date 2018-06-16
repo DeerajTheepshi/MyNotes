@@ -10,6 +10,8 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 import com.example.android.mynotes.data.contractClass.tasksTable;
 
+//CUSTOM ADAPTER CLASS FOR LISTVIEW IN HOME SCREEN
+
 public class CustomAdaper extends CursorAdapter {
 
     public CustomAdaper(Cursor cursor, Context context){
@@ -22,7 +24,7 @@ public class CustomAdaper extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, Context context, Cursor cursor) {                               //GET DATA AND BIND IT TO VIEWS
         String[] arr = context.getResources().getStringArray(R.array.importanceList);
         TextView listTask = (TextView) view.findViewById(R.id.displayTask);
         TextView listTime = (TextView) view.findViewById(R.id.displayTime);
@@ -33,7 +35,7 @@ public class CustomAdaper extends CursorAdapter {
         listDate.setText(dateReFormat(cursor.getString(cursor.getColumnIndex(tasksTable.DATE))));
         listPriority.setText(arr[cursor.getInt(cursor.getColumnIndex(tasksTable.PRIORITY))]);
     }
-    private String dateReFormat(String date){
+    private String dateReFormat(String date){                                                       //REFORMAT THE SQL FORMAT OF DATE TO ORDINARY DD/MM/YYYY
         String day = date.substring(8);
         String month = date.substring(5,7);
         String year = date.substring(0,4);

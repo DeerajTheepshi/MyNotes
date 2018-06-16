@@ -14,20 +14,22 @@ import android.widget.Toast;
 
 import com.example.android.mynotes.data.contractClass.tasksTable;
 
+//CONTENT PROVIDER CLASS FOR DATABASE
+
 public class provider extends ContentProvider {
 
     private static final int ENTIRE_TABLE = 50;
     private static final int SINGLE_TABLE = 51;
-    private static final UriMatcher matchUris = new UriMatcher(UriMatcher.NO_MATCH);
+    private static final UriMatcher matchUris = new UriMatcher(UriMatcher.NO_MATCH);                //URI MATCHER INITIATED
     private helperClass dbhelper;
 
-    static{
+    static{                                                                                         //URI PATTERNS ADDED AND MAPPED TO INTEGERS
         matchUris.addURI(contractClass.CONTENT_AUTHORITY,contractClass.PATH,ENTIRE_TABLE);
         matchUris.addURI(contractClass.CONTENT_AUTHORITY,contractClass.PATH+"/#",SINGLE_TABLE);
     }
 
     @Override
-    public boolean onCreate() {
+    public boolean onCreate() {                                                                     //CREATES A DATABASE BY CREATING A INSTACNCE OF THE DATABASE
         dbhelper = new helperClass(getContext());
         return true;
     }
@@ -38,18 +40,15 @@ public class provider extends ContentProvider {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         Cursor cursor=null;
         if(matchUris.match(uri)==ENTIRE_TABLE){
-            Log.v("kaala","vantenu sollu1");
             cursor = db.query(tasksTable.TABLE_NAME,projection,selection,selectionArgs,null,null,sortOrder);
-            Log.v("kaala","vantenu sollu2");
         }
-        cursor.setNotificationUri(getContext().getContentResolver(),uri);
-        Log.v("kaala","vantenu sollu");
+        cursor.setNotificationUri(getContext().getContentResolver(),uri);                           //SETS A NOTIFICATION LISTENER TO ALL CLASSES THAT USE THIS PROVIDER
         return cursor;
     }
 
     @Nullable
     @Override
-    public String getType(@NonNull Uri uri) {
+    public String getType(@NonNull Uri uri) {                                                       //NOT USED
         return null;
     }
 
@@ -65,8 +64,8 @@ public class provider extends ContentProvider {
             else
                 id = db.insert(tasksTable.TABLE_NAME,null,values);
         }
-        if(id!=-1) {
-            getContext().getContentResolver().notifyChange(uri, null);
+        if(id!=-1) {                                                                                //-1 IS RETURNED IF SOME ERROR IN INSERTION
+            getContext().getContentResolver().notifyChange(uri, null);                     //ALL LISTENERS ARE NOTIFIED ABOUT THE CHANGE
             return ContentUris.withAppendedId(uri, id);
         }
         else

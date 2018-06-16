@@ -38,11 +38,11 @@ public class home extends AppCompatActivity implements LoaderManager.LoaderCallb
         homelist = (ListView) findViewById(R.id.taskList);
 
 
-        adapter = new CustomAdaper(null,this);
+        adapter = new CustomAdaper(null,this);                                       //CREATE LISTVIEW, ATTACH ADAPTER AND EMPTY VIEWS TO IT
         homelist.setAdapter(adapter);
         homelist.setEmptyView(findViewById(R.id.emptyView));
 
-        newEntry.setOnClickListener(new View.OnClickListener() {
+        newEntry.setOnClickListener(new View.OnClickListener() {                                    //FLOATING BUTTON ACTION LISTENER
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(home.this,addTask.class );
@@ -50,18 +50,18 @@ public class home extends AppCompatActivity implements LoaderManager.LoaderCallb
             }
         });
 
-        homelist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                homelist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {     //DELETE OPTION FOR LONG PRESS EVENT
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final long idFinal = id;
-                new AlertDialog.Builder(home.this).setTitle("DELETE").setMessage("Are you sure to delete? ")
+                new AlertDialog.Builder(home.this).setTitle("DELETE").setMessage("Are you sure to delete? ") //BRING UP ALERT DIALOG
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Uri deluri = ContentUris.withAppendedId(tasksTable.CONTENT_URI,idFinal);
                                 getContentResolver().delete(deluri,null,null);
-                                getContentResolver().notifyChange(deluri,null);
-                                AppWidgetManager mgr = AppWidgetManager.getInstance(home.this);
+                                getContentResolver().notifyChange(deluri,null);                         //NOTIFY DATABASE PROVIDER LISTENERS
+                                AppWidgetManager mgr = AppWidgetManager.getInstance(home.this);                 //NOTIFY WIDGET BROADCAST LISTENERS
                                 ComponentName cn = new ComponentName(home.this, NotesWidget.class);
                                 mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.appwidget_list);
                             }
@@ -70,15 +70,13 @@ public class home extends AppCompatActivity implements LoaderManager.LoaderCallb
             }
         });
 
-        String data = null;
+        String data = null;                                                                         //FOLLOWNG OPERATES ON SORTING OF LIST BASED ON VARIOUS OPTIONS
         if(getIntent().getExtras()!=null)
             data = getIntent().getExtras().getString("menuControl");
-        Log.v("jumanji","hoi1");
         if(data!=null) {
-            Log.v("jumanji","hoi2");
+
             switch (data) {
                 case "priority":
-                    Log.v("jumanji","hoi");
                     setTitle("MyNotes - Priority");
                     getLoaderManager().initLoader(LOAD_DATA_PRIORITY, null, this);
                     getLoaderManager().restartLoader(LOAD_DATA_PRIORITY, null, this);
@@ -98,13 +96,13 @@ public class home extends AppCompatActivity implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {                                                 //LOAD OPTIONS MENU
         getMenuInflater().inflate(R.menu.sort_choice,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {                                           //SET ON CLICK LISTENERS FOR MENU ITEMS
         int itemID = item.getItemId();
         Intent intent = new Intent(this,home.class);
         switch (itemID){
@@ -121,17 +119,16 @@ public class home extends AppCompatActivity implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {                                     //CURSOR LOADER ABSTRACT METHOD IMPLEMENTATIONS
         if(id == LOAD_DATA){
             String[] projection = {tasksTable._ID,tasksTable.TASK, tasksTable.TIME,tasksTable.DATE,tasksTable.PRIORITY};
             return new CursorLoader(this,tasksTable.CONTENT_URI,projection,null,null,
                     tasksTable.DATE + " ASC, " + tasksTable.TIME + " ASC");
         }
         if(id == LOAD_DATA_PRIORITY){
-            Log.v("jumanji","hoi");
             String[] projection = {tasksTable._ID,tasksTable.TASK, tasksTable.TIME,tasksTable.DATE,tasksTable.PRIORITY};
             return new CursorLoader(this,tasksTable.CONTENT_URI,projection,null,null,
-                    tasksTable.PRIORITY + " DESC");
+                    tasksTable.PRIORITY + " ASC");
         }
         return null;
     }

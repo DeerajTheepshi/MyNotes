@@ -13,6 +13,8 @@ import com.example.android.mynotes.data.contractClass.tasksTable;
 
 import java.util.Calendar;
 
+//CLASS THAT BINDS CURSOR TO LISTVIEW
+
 public class remoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext;
     private Cursor mCursor;
@@ -20,7 +22,7 @@ public class remoteViewsFactory implements RemoteViewsService.RemoteViewsFactory
     public remoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
     }
-    private void initCursor(){
+    private void initCursor(){                                                                      //UPDATES OR INITATES A CURSOR
         if (mCursor != null) {
             mCursor.close();
         }
@@ -30,18 +32,16 @@ public class remoteViewsFactory implements RemoteViewsService.RemoteViewsFactory
         Uri uri = tasksTable.CONTENT_URI;
         String[] projection = {tasksTable._ID,tasksTable.TASK,tasksTable.TIME};
         String selection = tasksTable.DATE + "=?";
-        String[] selctionArgs = new String[]{getDate()};
-        Log.v("mama",getDate());
+        String[] selctionArgs = new String[]{getDate()};                                            //MATCHES DATE OF CURRENT DAY TO SORT OUT DATA
         mCursor = mContext.getContentResolver().query(uri,
                 projection,
                 selection,
                 selctionArgs,
                 tasksTable.TIME+ " ASC");
-        Log.v("Kaala","InitCursor()");
         Binder.restoreCallingIdentity(identityToken);
     }
 
-    private String getDate(){
+    private String getDate(){                                                                       //DATE GETTER
         Calendar cal = Calendar.getInstance();
         String yr=cal.get(Calendar.YEAR)+"", monthformat=cal.get(Calendar.MONTH)+"", dayformat=cal.get(Calendar.DAY_OF_MONTH)+"";
         if(cal.get(Calendar.MONTH)<10)
@@ -51,33 +51,31 @@ public class remoteViewsFactory implements RemoteViewsService.RemoteViewsFactory
         return yr+"/"+monthformat+"/"+dayformat;
     }
     @Override
-    public void onDataSetChanged() {
-        Log.v("Kaala","OnDataSetChanged");
+    public void onDataSetChanged() {                                                                //CALLED WHENEVER DATA SET IS CHANGED, INITIATES A NEW CURSOR
         initCursor();
 
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy() {                                                                       //WHEN WIDGET IS DESTROYED
         if (mCursor != null) {
             mCursor.close();
         }
     }
 
     @Override
-    public int getCount() {
+    public int getCount() {                                                                         //ABSTRACT METHOD IMPLEMENTATIONS
         return  mCursor.getCount();
     }
 
     @Override
-    public RemoteViews getViewAt(int position) {
+    public RemoteViews getViewAt(int position) {                                                    //BINDS VIEWS TO CURSOR DATA
 
         if (position == AdapterView.INVALID_POSITION ||
                 mCursor == null || !mCursor.moveToPosition(position)) {
 
             return null;
         }
-        Log.v("Kaala","getView");
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
         rv.setTextViewText(R.id.text1,"* \t"+mCursor.getString(1));
         rv.setTextViewText(R.id.time1,"  \t "+mCursor.getString(2));
